@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  cmake_build:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: cmake_build
+    image: cmake_build:latest
+
+  cmake_app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: cmake_app
+    image: cmake_app:latest
+    depends_on:
+      - cmake_build
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: bash -c "./build.sh --all"
