@@ -1,0 +1,65 @@
+name: BuildAndTest
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Depdencies
+      # install coverage tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential lcov libssl-dev
+        sudo apt install gcovr libxml2-utils -y
+
+    - name: Test
+      working-directory: ${{github.workspace}}
+      # Build your program with the given configuration
+      # Execute tests defined by the CMake configuration.
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ./build.sh --all
+
+    - name: Generate Coverage Badge
+      run: |
+        echo $(pwd)
+        # Capture coverage percentage values
+        lines_percent=$(lcov --summary build/cov_test_filtered.info | awk '/lines......:/ { printf "%.0f", $2 }')
+        functions_percent=$(lcov --summary build/cov_test_filtered.info | awk '/functions..:/ { printf "%.0f", $2 }')
+
+        # Print the coverage percentages
+        echo "Lines Coverage: ${lines_percent}%"
+        echo "Functions Coverage: ${functions_percent}%"
+
+        # Determine color based on coverage percentage
+        if ((lines_percent >= 90 && functions_percent >= 90)); then
+            color="brightgreen"
+        elif ((lines_percent >= 70 && functions_percent >= 70)); then
+            color="yellow"
+        else
+            color="red"
+        fi
+
+        # Generate coverage badge using the calculated coverage percentages
+        curl -s "https://img.shields.io/badge/coverage-${lines_percent}%25-${color}.svg" > coverage.svg
+
+        # Save the generated badge to the repository
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git add -f coverage.svg
+        git commit -m "Update coverage badge [skip ci]"
+        git push
