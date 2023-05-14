@@ -57,7 +57,7 @@ Each library has it's own tests.
 
 ## Building Project
 1. Running ```./build.sh --all``` will generate Xcode project when run on Mac, Visual Studio 2022 when run on Windows.
-2. Running ```./build.sh --docker``` will build and run the tests in a docker container.
+2. Running ```./build.sh --docker --all``` will build and run the tests in a docker container.
 
 **NOTE**: 
 DO NOT make changes to generated project file, instead edit CMakeLists.txt files and regenerate project using CMake.
