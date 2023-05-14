@@ -8,6 +8,7 @@ This repository is CMake project structure originally by [Darius Sabaliauskas](h
 - added generation of code coverate reports.
 - use docker build if you need to run the build in a container.
 - removed gtest and use Fetchcontent to get it
+- added build badge
 
 ## Table of contents
 - [Project structure](#project-structure)
