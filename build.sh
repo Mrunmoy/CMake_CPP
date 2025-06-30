@@ -73,7 +73,7 @@ function build() {
       # Run tests and generate coverage report
       echo "Running Tests..."
       rm -f *.info
-      ctest -C $build_type --coverage --verbose --output-on-failure
+      ctest -C $build_type --verbose --output-on-failure
 
       if command -v lcov >/dev/null 2>&1 && command -v genhtml >/dev/null 2>&1; then
         if [[ "$OSTYPE" == "darwin"* ]]; then
