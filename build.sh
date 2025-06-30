@@ -84,7 +84,7 @@ function build() {
         lcov --remove coverage.info '/usr/include/*' -o cov_test_filtered.info
         lcov --remove cov_test_filtered.info '/Applications/Xcode.app/*' -o cov_test_filtered.info
         lcov --remove cov_test_filtered.info '*/_deps/*'  -o cov_test_filtered.info
-        lcov --remove cov_test_filtered.info '*/Testing/*' -o cov_test_filtered.info
+        lcov --remove cov_test_filtered.info '*/Testing/*' --ignore-errors unused -o cov_test_filtered.info
         genhtml cov_test_filtered.info --output-directory coverage_report
         echo "Coverage report generated at $(realpath coverage_report/index.html)"
       else
