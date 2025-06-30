@@ -10,7 +10,43 @@ RingBuffer::RingBuffer(size_t size)
 
 RingBuffer::~RingBuffer()
 {
-	delete[] m_buffer;
+        delete[] m_buffer;
+}
+
+RingBuffer::RingBuffer(RingBuffer&& other) noexcept
+        : m_buffer(other.m_buffer)
+        , m_head(other.m_head)
+        , m_tail(other.m_tail)
+        , m_capacity(other.m_capacity)
+        , m_isFull(other.m_isFull)
+{
+        other.m_buffer = nullptr;
+        other.m_head = 0;
+        other.m_tail = 0;
+        other.m_capacity = 0;
+        other.m_isFull = false;
+}
+
+RingBuffer& RingBuffer::operator=(RingBuffer&& other) noexcept
+{
+        if (this != &other)
+        {
+                delete[] m_buffer;
+
+                m_buffer = other.m_buffer;
+                m_head = other.m_head;
+                m_tail = other.m_tail;
+                m_capacity = other.m_capacity;
+                m_isFull = other.m_isFull;
+
+                other.m_buffer = nullptr;
+                other.m_head = 0;
+                other.m_tail = 0;
+                other.m_capacity = 0;
+                other.m_isFull = false;
+        }
+
+        return *this;
 }
 
 bool RingBuffer::push(uint8_t* data, size_t size)
