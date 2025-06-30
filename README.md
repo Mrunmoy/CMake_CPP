@@ -1,6 +1,9 @@
 
 # CMake C++ Project template
-![Test Status](https://github.com//Mrunmoy/CMake_CPP/workflows/BuildAndTest/badge.svg?branch=main)
+
+![Build Status](https://github.com/Mrunmoy/CMake_CPP/workflows/BuildAndTest/badge.svg?branch=main)
+![Coverage](https://raw.githubusercontent.com/Mrunmoy/CMake_CPP/main/coverage.svg)
+
 
 This repository is CMake project structure originally by [Darius Sabaliauskas](https://github.com/Jamagas) [here](https://github.com/Jamagas/CMake). I had to make a copy of the original repo as I did not have access to be able to set github bot to push an image to the repo for code coverage. I refactored it a bit to 
 - added an AppConfig.hpp header if you need to configure some defines for your application
