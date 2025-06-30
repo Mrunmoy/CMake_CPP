@@ -130,3 +130,22 @@ TEST_F (RingBufferTest, BufferWrapAround)
     EXPECT_TRUE(ringBuffer->pop(poppedData, sizeof(poppedData)));
     EXPECT_EQ(memcmp(secondData, poppedData, sizeof(secondData)), 0);
 }
+
+TEST_F (RingBufferTest, Available_TailGreaterThanHead)
+{
+    // Perform a sequence of push/pop operations that will cause the
+    // internal tail index to advance past the head index.
+    uint8_t firstData[900] = { 0 };
+    uint8_t secondData[700] = { 0 };
+    uint8_t temp[800];
+
+    ASSERT_TRUE(ringBuffer->push(firstData, sizeof(firstData)));
+    ASSERT_TRUE(ringBuffer->pop(temp, 800));
+    ASSERT_TRUE(ringBuffer->push(secondData, sizeof(secondData)));
+
+    // After the above operations the buffer contains 800 bytes of data
+    // and the tail index is greater than the head index. Available should
+    // therefore report the remaining capacity correctly.
+    EXPECT_EQ(ringBuffer->size(), 800u);
+    EXPECT_EQ(ringBuffer->available(), 1024u - 800u);
+}

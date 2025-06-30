@@ -110,17 +110,9 @@ size_t RingBuffer::size() const
 
 size_t RingBuffer::available() const
 {
-	if (m_head == m_tail)
-	{
-		return m_isFull ? 0 : m_capacity;
-	}
-	else if (m_head > m_tail)
-	{
-		return m_capacity - (m_head - m_tail);
-	}
-
-	// m_tail > m_head
-	return m_tail - m_head - 1;
+        // The number of free bytes is simply the capacity minus the
+        // number of bytes currently stored in the buffer.
+        return m_capacity - size();
 }
 
 bool RingBuffer::empty() const
