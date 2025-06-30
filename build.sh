@@ -73,18 +73,18 @@ function build() {
       # Run tests and generate coverage report
       echo "Running Tests..."
       rm -f *.info
-      ctest -C $build_type --coverage --verbose --output-on-failure
+      ctest -C $build_type --verbose --output-on-failure
 
       if command -v lcov >/dev/null 2>&1 && command -v genhtml >/dev/null 2>&1; then
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          lcov --directory build --capture --output-file coverage.info
-        else
-          lcov --directory . --capture --output-file coverage.info
-        fi
+          if [[ "$OSTYPE" == "darwin"* ]]; then
+            lcov --directory build --capture --output-file coverage.info --ignore-errors mismatch
+          else
+            lcov --directory . --capture --output-file coverage.info --ignore-errors mismatch
+          fi
         lcov --remove coverage.info '/usr/include/*' -o cov_test_filtered.info
         lcov --remove cov_test_filtered.info '/Applications/Xcode.app/*' -o cov_test_filtered.info
         lcov --remove cov_test_filtered.info '*/_deps/*'  -o cov_test_filtered.info
-        lcov --remove cov_test_filtered.info '*/Testing/*' -o cov_test_filtered.info
+        lcov --remove cov_test_filtered.info '*/Testing/*' --ignore-errors unused -o cov_test_filtered.info
         genhtml cov_test_filtered.info --output-directory coverage_report
         echo "Coverage report generated at $(realpath coverage_report/index.html)"
       else
