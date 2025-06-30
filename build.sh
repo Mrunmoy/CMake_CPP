@@ -76,11 +76,11 @@ function build() {
       ctest -C $build_type --verbose --output-on-failure
 
       if command -v lcov >/dev/null 2>&1 && command -v genhtml >/dev/null 2>&1; then
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          lcov --directory build --capture --output-file coverage.info
-        else
-          lcov --directory . --capture --output-file coverage.info
-        fi
+          if [[ "$OSTYPE" == "darwin"* ]]; then
+            lcov --directory build --capture --output-file coverage.info --ignore-errors mismatch
+          else
+            lcov --directory . --capture --output-file coverage.info --ignore-errors mismatch
+          fi
         lcov --remove coverage.info '/usr/include/*' -o cov_test_filtered.info
         lcov --remove cov_test_filtered.info '/Applications/Xcode.app/*' -o cov_test_filtered.info
         lcov --remove cov_test_filtered.info '*/_deps/*'  -o cov_test_filtered.info
