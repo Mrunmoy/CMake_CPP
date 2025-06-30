@@ -27,12 +27,7 @@ set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${LIBRARY_NAME}" P
 
 # Set compile definitions based on the configuration
 target_compile_definitions(${LIBRARY_NAME} PRIVATE
-	$<$<CONFIG:Debug>:DEBUG_BUILD>
-)
-
-# Set compile definitions based on the configuration
-target_compile_definitions(${LIBRARY_NAME} PRIVATE
-	$<$<CONFIG:Debug>:DEBUG_BUILD>
+        $<$<CONFIG:Debug>:DEBUG_BUILD>
 )
 
 # Set include directories for linking
