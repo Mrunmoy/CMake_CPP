@@ -5,8 +5,16 @@
 
 class RingBuffer {
 public:
-	RingBuffer(size_t size);
-	~RingBuffer();
+        RingBuffer(size_t size);
+        ~RingBuffer();
+
+        // Delete copy operations
+        RingBuffer(const RingBuffer&) = delete;
+        RingBuffer& operator=(const RingBuffer&) = delete;
+
+        // Allow move semantics
+        RingBuffer(RingBuffer&& other) noexcept;
+        RingBuffer& operator=(RingBuffer&& other) noexcept;
 
 	bool push(uint8_t* data, size_t size);
 	bool pop(uint8_t* data, size_t size);

@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <type_traits>
 #include "RingBuffer.hpp"
 
 class RingBufferTest
@@ -148,4 +149,28 @@ TEST_F (RingBufferTest, Available_TailGreaterThanHead)
     // therefore report the remaining capacity correctly.
     EXPECT_EQ(ringBuffer->size(), 800u);
     EXPECT_EQ(ringBuffer->available(), 1024u - 800u);
+}
+
+TEST(RingBufferTypeTraits, CopyAndMoveProperties)
+{
+    EXPECT_FALSE(std::is_copy_constructible_v<RingBuffer>);
+    EXPECT_FALSE(std::is_copy_assignable_v<RingBuffer>);
+    EXPECT_TRUE(std::is_move_constructible_v<RingBuffer>);
+    EXPECT_TRUE(std::is_move_assignable_v<RingBuffer>);
+}
+
+TEST(RingBufferMoveTest, MoveConstructorAndAssignment)
+{
+    RingBuffer rb1(16);
+    uint8_t data[4] = {1, 2, 3, 4};
+    ASSERT_TRUE(rb1.push(data, sizeof(data)));
+
+    RingBuffer rb2(std::move(rb1));
+    EXPECT_EQ(rb2.size(), sizeof(data));
+    EXPECT_EQ(rb1.size(), 0u);
+
+    RingBuffer rb3(8);
+    rb3 = std::move(rb2);
+    EXPECT_EQ(rb3.size(), sizeof(data));
+    EXPECT_EQ(rb2.size(), 0u);
 }
