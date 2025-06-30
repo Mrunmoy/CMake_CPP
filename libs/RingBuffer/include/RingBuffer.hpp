@@ -17,8 +17,8 @@ public:
 
 private:
 	uint8_t*	m_buffer = nullptr;
-	int			m_head = 0;
-	int			m_tail = 0;
+	size_t          m_head = 0;
+	size_t          m_tail = 0;
 	size_t		m_capacity = 0;
 	bool		m_isFull = false;
 };
