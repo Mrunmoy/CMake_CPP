@@ -72,19 +72,24 @@ function build() {
     if [ "$enable_testing" == "ON" ]; then
       # Run tests and generate coverage report
       echo "Running Tests..."
-      rm *.info
+      rm -f *.info
       ctest -C $build_type --coverage --verbose --output-on-failure
-      if [[ "$OSTYPE" == "darwin"* ]]; then
-        lcov --directory build --capture --output-file coverage.info
+
+      if command -v lcov >/dev/null 2>&1 && command -v genhtml >/dev/null 2>&1; then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          lcov --directory build --capture --output-file coverage.info
+        else
+          lcov --directory . --capture --output-file coverage.info
+        fi
+        lcov --remove coverage.info '/usr/include/*' -o cov_test_filtered.info
+        lcov --remove cov_test_filtered.info '/Applications/Xcode.app/*' -o cov_test_filtered.info
+        lcov --remove cov_test_filtered.info '*/_deps/*'  -o cov_test_filtered.info
+        lcov --remove cov_test_filtered.info '*/Testing/*' -o cov_test_filtered.info
+        genhtml cov_test_filtered.info --output-directory coverage_report
+        echo "Coverage report generated at $(realpath coverage_report/index.html)"
       else
-        lcov --directory . --capture --output-file coverage.info
+        echo "lcov or genhtml not found. Skipping coverage generation. Install 'lcov' package to enable." >&2
       fi
-      lcov --remove coverage.info '/usr/include/*' -o cov_test_filtered.info
-      lcov --remove cov_test_filtered.info '/Applications/Xcode.app/*' -o cov_test_filtered.info
-      lcov --remove cov_test_filtered.info '*/_deps/*'  -o cov_test_filtered.info
-      lcov --remove cov_test_filtered.info '*/Testing/*' -o cov_test_filtered.info
-      genhtml cov_test_filtered.info --output-directory coverage_report
-      echo "Coverage report generated at $(realpath coverage_report/index.html)"
     fi
   fi
 }

@@ -12,6 +12,7 @@ This repository is CMake project structure originally by [Darius Sabaliauskas](h
 
 ## Table of contents
 - [Project structure](#project-structure)
+- [Required packages](#required-packages)
 - [Building Project](#building-project)
 - [Copyright and license](#copyright-and-license)
 
@@ -54,6 +55,13 @@ Each library has it's own tests.
 └── src
     └── main.cpp
 ```
+
+## Required packages
+
+To build and generate coverage reports locally you need the following tools:
+
+- `lcov` and `genhtml` - for capturing and generating HTML coverage reports
+- `gcovr` - for summarizing coverage in CI pipelines
 
 ## Building Project
 1. Running ```./build.sh --all``` will generate Xcode project when run on Mac, Visual Studio 2022 when run on Windows.
