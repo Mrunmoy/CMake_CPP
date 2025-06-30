@@ -99,3 +99,4 @@ The other option is to open the xcode project and then delete the POST BUILD ste
 
 Code and documentation copyright 2015 Darius Sabaliauskas and released under 
 [the MIT license](https://github.com/Jamagas/CMake/blob/master/LICENSE).
+ 
